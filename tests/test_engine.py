@@ -1,14 +1,12 @@
 import itertools
 import math
-from pathlib import Path
-import pytest
 import tempfile
+from pathlib import Path
 
 import numpy as np
+import pytest
 
-from connect6.game import GameEngine, Player, TurnData
-from connect6.game import common
-from connect6.game import errors
+from connect6.game import GameEngine, Player, TurnData, common, errors
 from connect6.game.state import GameState
 from connect6.game.storage import CellStorage
 
@@ -20,15 +18,15 @@ def test_cell_interface(row, col):
     assert cell.as_tuple() == (row, col)
 
     if row > 0:
-        with pytest.raises(errors.NegativeCellCoordinateError) as err:
+        with pytest.raises(errors.NegativeCellCoordinateError):
             common.Cell(-row, col)
 
     if col > 0:
-        with pytest.raises(errors.NegativeCellCoordinateError) as err:
+        with pytest.raises(errors.NegativeCellCoordinateError):
             common.Cell(row, -col)
 
     if row > 0 or col > 0:
-        with pytest.raises(errors.NegativeCellCoordinateError) as err:
+        with pytest.raises(errors.NegativeCellCoordinateError):
             common.Cell(-row, -col)
 
 
@@ -60,17 +58,17 @@ def test_cell_storage_valid_restore(length):
 def test_cell_storage_invalid_shape(shape):
     length = math.prod(shape)
     data = np.arange(length).reshape(shape)
-    with pytest.raises(errors.WrongBufferShapeError) as err:
+    with pytest.raises(errors.WrongBufferShapeError):
         CellStorage(data)
 
 
 @pytest.mark.parametrize("length", [10, 100, 1000])
 def test_cell_storage_negative_values(length):
     data = np.arange(length * 2).reshape((length, 2))
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         CellStorage(-data)
     data[-1] = (0, -1)
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         CellStorage(-data)
 
 
@@ -92,7 +90,7 @@ def test_valid_player(num_players):
 
 @pytest.mark.parametrize("num_players", [-1, 0, 1, 100])
 def test_invalid_num_players(num_players):
-    with pytest.raises(RuntimeError) as err:
+    with pytest.raises(RuntimeError):
         Player[num_players]
 
 
@@ -110,7 +108,7 @@ def test_valid_turn_data(num_cells_per_turn):
 
 @pytest.mark.parametrize("num_cells_per_turn", [0, -1])
 def test_turn_data_wrong_num_cells_per_turn(num_cells_per_turn):
-    with pytest.raises(RuntimeError) as err:
+    with pytest.raises(RuntimeError):
         TurnData[num_cells_per_turn]
 
 
@@ -121,7 +119,7 @@ def test_turn_data_wrong_num_cells_per_turn(num_cells_per_turn):
 def test_turn_data_invalid_num_cells_per_turn(actual, expected):
     player = Player[2].first()
     cells = [common.Cell(i * 2, i * 2 + 1) for i in range(actual)]
-    with pytest.raises(RuntimeError) as err:
+    with pytest.raises(RuntimeError):
         TurnData[expected](player, cells)
 
 
@@ -133,7 +131,7 @@ def test_turn_data_equal_cells(num_cells_per_turn):
     else:
         cells = [common.Cell(i * 2, i * 2 + 1) for i in range(num_cells_per_turn - 1)]
         cells.append(cells[0])
-        with pytest.raises(errors.EqualCellsInTurnError) as err:
+        with pytest.raises(errors.EqualCellsInTurnError):
             TurnData[num_cells_per_turn](player, cells)
 
 
@@ -245,7 +243,7 @@ def test_state_generate_board_fail():
     for history in intersected_histories:
         state_dict.update(history=history)
         state = GameState.from_dict(state_dict)
-        with pytest.raises(RuntimeError) as err:
+        with pytest.raises(RuntimeError):
             state.generate_board()
 
 
@@ -271,7 +269,7 @@ def test_state_bad_history_lengths(num_players, num_cells_per_turn, lengths):
             for player, length in zip(Player[num_players], lengths)
         },
     }
-    with pytest.raises(RuntimeError) as err:
+    with pytest.raises(RuntimeError):
         GameState.from_dict(state_dict)
 
 

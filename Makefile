@@ -1,14 +1,19 @@
-.PHONY: lint clean clean-build clean-pyc test test-all
+.PHONY: lint mypy clean clean-build clean-pyc test test-all pre-commit
 
 help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
-	@echo "lint - check style with flake8"
+	@echo "lint - check style with flake8, black & isort"
+	@echo "mypy - check types with mypy"
 	@echo "test - run tests quickly with the default Python"
-	@echo "testall - run tests on every Python version with tox"
+	@echo "test-all - run tests on every Python version with tox"
+	@echo "pre-commit - run pre-commit hooks on all files"
 
 lint:
 	tox -e lint
+
+mypy:
+	tox -e type
 
 clean: clean-build clean-pyc
 
@@ -28,3 +33,6 @@ test:
 
 test-all:
 	tox
+
+pre-commit:
+	pre-commit run --all-files
