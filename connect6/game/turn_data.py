@@ -42,7 +42,7 @@ class _Registry(Dict[int, BaseTurnData]):
         if num_cells < 1:
             raise RuntimeError(f"Turn should consist of ≥ 1 cells, got {num_cells}")
         if num_cells not in self:
-            self[num_cells] = type(
+            self[num_cells] = type(  # type: ignore
                 f"TurnData{num_cells}", (BaseTurnData,), dict(num_cells=num_cells)
             )
         return super().__getitem__(num_cells)

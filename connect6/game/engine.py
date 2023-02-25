@@ -41,13 +41,13 @@ class GameEngine:
         logger.info(f"Successfully initialized {self}")
 
     @classmethod
-    def restore(cls, state: GameState) -> 'GameEngine':
+    def restore(cls, state: GameState) -> "GameEngine":
         return cls(_state=state)
 
     @property
     def max_num_turns(self) -> int:
         """Maximum possible number of turns on the board of given size."""
-        return (self._size ** 2 - 1) // self.state.num_cells_per_turn + 1
+        return (self._size**2 - 1) // self.state.num_cells_per_turn + 1
 
     @property
     def current_player(self) -> BasePlayer:
@@ -99,7 +99,7 @@ class GameEngine:
                 return True
         return False
 
-    def _validate_board_size(self, size: int) -> int:
+    def _validate_board_size(self, size: int) -> None:
         if size % 2 == 0:
             raise RuntimeError(f"Board size must be odd number, got {size}")
         if not (constants.MIN_BOARD_SIZE <= size <= constants.MAX_BOARD_SIZE):
@@ -110,7 +110,7 @@ class GameEngine:
         if data.player is not self.current_player:
             raise errors.WrongPlayerError(data.player.name, self.state.num_turns)
 
-        if not isinstance(data, TurnData[self.state.num_cells_per_turn]):
+        if not isinstance(data, TurnData[self.state.num_cells_per_turn]):  # type: ignore
             raise RuntimeError  # TODO
 
         for cell in data.cells:

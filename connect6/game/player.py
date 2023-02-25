@@ -1,5 +1,5 @@
 import enum
-from typing import Dict, Optional
+from typing import Dict
 
 
 __all__ = [
@@ -10,13 +10,13 @@ __all__ = [
 
 class BasePlayer(enum.IntEnum):
     @classmethod
-    def current(cls, num_turns: int) -> Optional['BasePlayer']:
+    def current(cls, num_turns: int) -> "BasePlayer":
         if len(cls) == 0:
-            return None
+            raise RuntimeError(f"This is a base class {cls.__name__}")
         return cls(num_turns % len(cls) + 1)
 
     @classmethod
-    def first(cls) -> 'BasePlayer':
+    def first(cls) -> "BasePlayer":
         return cls.current(0)
 
 
@@ -33,8 +33,8 @@ class _Registry(Dict[int, BasePlayer]):
             if num_players < 2 or num_players > len(_COLORS):
                 message = f"Supported 2 to {len(_COLORS)} players, got {num_players}"
                 raise RuntimeError(message)
-            players = _COLORS[: num_players]
-            self[num_players] = BasePlayer(f"Player{num_players}", players)
+            players = _COLORS[:num_players]
+            self[num_players] = BasePlayer(f"Player{num_players}", players)  # type: ignore
         return super().__getitem__(num_players)
 
 

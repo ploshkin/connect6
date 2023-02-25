@@ -12,19 +12,19 @@ from connect6.game.turn_data import BaseTurnData
 
 class GameState:
     def __init__(
-            self,
-            size: int,
-            num_players: int,
-            num_cells_per_turn: int,
-            num_cells_to_win: int, 
-            history: Optional[Dict[str, CellStorage]] = None,
+        self,
+        size: int,
+        num_players: int,
+        num_cells_per_turn: int,
+        num_cells_to_win: int,
+        history: Optional[Dict[str, CellStorage]] = None,
     ) -> None:
         self._size = size
         self._num_cells_per_turn = num_cells_per_turn
         self._num_cells_to_win = num_cells_to_win
 
         history = defaultdict(CellStorage) if history is None else history
-        self._history = {player: history[player.name] for player in Player[num_players]}
+        self._history = {player: history[player.name] for player in Player[num_players]}  # type: ignore
 
         self._validate_history()
 
@@ -55,8 +55,7 @@ class GameState:
 
     def as_dict(self) -> Dict[str, Any]:
         history = {
-            player.name: history.data
-            for player, history in self._history.items()
+            player.name: history.data for player, history in self._history.items()
         }
         return {
             "size": self.size,
@@ -67,10 +66,9 @@ class GameState:
         }
 
     @classmethod
-    def from_dict(cls, state_dict: Dict[str, Any]) -> 'GameState':
+    def from_dict(cls, state_dict: Dict[str, Any]) -> "GameState":
         state_dict["history"] = {
-            name: CellStorage(buffer)
-            for name, buffer in state_dict["history"].items()
+            name: CellStorage(buffer) for name, buffer in state_dict["history"].items()
         }
         return cls(**state_dict)
 
@@ -81,13 +79,13 @@ class GameState:
         np.savez(path, **state_dict, **history)
 
     @classmethod
-    def load(cls, path: PathLike) -> 'GameState':
+    def load(cls, path: PathLike) -> "GameState":
         flat_dict = dict(np.load(path))
-        state_dict = {
+        state_dict: Dict[str, Any] = {
             "size": int(flat_dict.pop("size")),
             "num_players": int(flat_dict.pop("num_players")),
             "num_cells_per_turn": int(flat_dict.pop("num_cells_per_turn")),
-            "num_cells_to_win": int(flat_dict.pop("num_cells_to_win"))
+            "num_cells_to_win": int(flat_dict.pop("num_cells_to_win")),
         }
         state_dict["history"] = flat_dict
         return cls.from_dict(state_dict)
@@ -116,7 +114,7 @@ class GameState:
                 )
         num_turns = [
             len(self._history[player]) // self.num_cells_per_turn
-            for player in Player[self.num_players]
+            for player in Player[self.num_players]  # type: ignore
         ]
         num_turns[0] += 1  # first turn
 

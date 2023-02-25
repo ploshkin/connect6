@@ -15,7 +15,7 @@ class CellOutOfBoundsError(RuntimeError):
 
 class CellOccupiedError(RuntimeError):
     def __init__(self, cell: Tuple[int, int]) -> None:
-        super.__init__(f"Cell {cell} is already occupied")
+        super().__init__(f"Cell {cell} is already occupied")
 
 
 class WrongPlayerError(RuntimeError):

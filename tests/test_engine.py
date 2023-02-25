@@ -172,7 +172,7 @@ def test_state_interface(size, num_players, num_cells_per_turn, num_cells_to_win
     assert state.num_turns == 1
 
     board = state.generate_board()
-    assert board.shape[: 2] == (size, size)
+    assert board.shape[:2] == (size, size)
     assert board[size // 2, size // 2] == Player[num_players].first().value
     board[size // 2, size // 2] = 0
     assert (board == 0).all()
@@ -240,7 +240,7 @@ def test_state_generate_board_fail():
         {
             Player[2](1).name: np.array([(0, 0), (1, 1)], dtype=np.int32),
             Player[2](2).name: np.array([(5, 5), first_turn], dtype=np.int32),
-        }
+        },
     ]
     for history in intersected_histories:
         state_dict.update(history=history)
@@ -258,7 +258,7 @@ def test_state_generate_board_fail():
         (3, 2, [2, 0, 2]),
         (3, 2, [4, 2, 0]),
         (3, 3, [4, 3, 3]),
-    ]
+    ],
 )
 def test_state_bad_history_lengths(num_players, num_cells_per_turn, lengths):
     state_dict = {
@@ -269,7 +269,7 @@ def test_state_bad_history_lengths(num_players, num_cells_per_turn, lengths):
         "history": {
             player.name: np.zeros((length, 2), np.int32)
             for player, length in zip(Player[num_players], lengths)
-        }
+        },
     }
     with pytest.raises(RuntimeError) as err:
         GameState.from_dict(state_dict)
@@ -283,7 +283,7 @@ def test_valid_gomoku_game(restore_turn):
         num_cells_per_turn=1,
         num_cells_to_win=5,
     )
-    assert gomoku.max_num_turns == 15 ** 2
+    assert gomoku.max_num_turns == 15**2
     assert gomoku.current_player is Player[2].current(1)
     assert gomoku.is_occupied(common.Cell(7, 7))
     assert not gomoku.is_occupied(common.Cell(0, 0))
