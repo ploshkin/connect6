@@ -24,7 +24,7 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -rf {} +
 
 test:
-	PYTHONPATH=./ pytest tests
+	tox -e test
 
 test-all:
 	tox

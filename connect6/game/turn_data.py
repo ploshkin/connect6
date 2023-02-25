@@ -1,10 +1,7 @@
 import dataclasses
 from typing import Dict, List
 
-from connect6.game import common
-from connect6.game import errors
-from connect6.game import player
-
+from connect6.game import common, errors, player
 
 __all__ = [
     "BaseTurnData",

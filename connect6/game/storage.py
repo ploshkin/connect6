@@ -2,8 +2,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-from connect6.game import common
-from connect6.game import errors
+from connect6.game import common, errors
 
 
 class CellStorage:

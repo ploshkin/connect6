@@ -1,7 +1,6 @@
 import enum
 from typing import Dict
 
-
 __all__ = [
     "BasePlayer",
     "Player",

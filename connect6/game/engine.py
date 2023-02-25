@@ -3,13 +3,10 @@ from typing import Optional
 
 import numpy as np
 
-from connect6.game import common
-from connect6.game import constants
-from connect6.game import errors
+from connect6.game import common, constants, errors
 from connect6.game.player import BasePlayer, Player
 from connect6.game.state import GameState
 from connect6.game.turn_data import BaseTurnData, TurnData
-
 
 logger = logging.getLogger(__name__)
 
