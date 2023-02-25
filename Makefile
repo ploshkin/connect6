@@ -1,11 +1,16 @@
-.PHONY: test
+.PHONY: lint clean clean-build clean-pyc test test-all
 
-default: test
+help:
+	@echo "clean-build - remove build artifacts"
+	@echo "clean-pyc - remove Python file artifacts"
+	@echo "lint - check style with flake8"
+	@echo "test - run tests quickly with the default Python"
+	@echo "testall - run tests on every Python version with tox"
 
-format:
-	black --line-length=88 ./
+lint:
+	tox -e lint
 
-clean: clean-build clean-pyc clean-pycache
+clean: clean-build clean-pyc
 
 clean-build:
 	rm -fr build/
@@ -16,9 +21,10 @@ clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
-
-clean-pycache:
 	find . -name '__pycache__' -exec rm -rf {} +
 
 test:
-	PYTHONPATH=./ pytest tests/
+	PYTHONPATH=./ pytest tests
+
+test-all:
+	tox
