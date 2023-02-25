@@ -1,0 +1,2 @@
+MIN_BOARD_SIZE: int = 15
+MAX_BOARD_SIZE: int = 31
