@@ -1,13 +1,10 @@
 repos:
 # isort
-- repo: https://github.com/asottile/seed-isort-config
-  rev: v2.2.0
-  hooks:
-  - id: seed-isort-config
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.10.1
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
   hooks:
   - id: isort
+    name: isort (python)
 
 # black
 - repo: https://github.com/ambv/black
@@ -18,7 +15,7 @@ repos:
         - --line-length=88
         - --include='\.pyi?$'
 
-        # these folders wont be formatted by black
+        # these folders won't be formatted by black
         - --exclude="""\.git |
           \.__pycache__|
           \.hg|
@@ -32,10 +29,9 @@ repos:
 
       language_version: python3.8
 
-
 # flake8
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
+- repo: https://github.com/pycqa/flake8
+  rev: 6.0.0
   hooks:
     - id: flake8
       args: # arguments to configure flake8
