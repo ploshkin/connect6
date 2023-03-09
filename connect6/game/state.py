@@ -23,8 +23,10 @@ class GameState:
         self._num_cells_per_turn = num_cells_per_turn
         self._num_cells_to_win = num_cells_to_win
 
+        self.Player = Player[num_players]
+
         history = defaultdict(CellStorage) if history is None else history
-        self._history = {player: history[player.name] for player in Player[num_players]}  # type: ignore
+        self._history = {player: history[player.name] for player in self.Player}  # type: ignore
 
         self._validate_history()
 
@@ -39,7 +41,7 @@ class GameState:
 
     @property
     def num_players(self) -> int:
-        return len(self._history)
+        return len(self.Player)
 
     @property
     def num_cells_per_turn(self) -> int:
@@ -99,7 +101,7 @@ class GameState:
             occupancy_count[rows, cols] += 1
 
         # first turn
-        board[self.size // 2, self.size // 2] = Player[self.num_players].first().value
+        board[self.size // 2, self.size // 2] = self.Player.first().value
         occupancy_count[self.size // 2, self.size // 2] += 1
         if (occupancy_count > 1).any():
             raise RuntimeError("Historical turns have intersection")
@@ -114,7 +116,7 @@ class GameState:
                 )
         num_turns = [
             len(self._history[player]) // self.num_cells_per_turn
-            for player in Player[self.num_players]  # type: ignore
+            for player in self.Player  # type: ignore
         ]
         num_turns[0] += 1  # first turn
 

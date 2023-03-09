@@ -4,7 +4,7 @@ from typing import Optional
 import numpy as np
 
 from connect6.game import common, constants, errors
-from connect6.game.player import BasePlayer, Player
+from connect6.game.player import BasePlayer
 from connect6.game.state import GameState
 from connect6.game.turn_data import BaseTurnData, TurnData
 
@@ -21,19 +21,15 @@ class GameEngine:
         *,
         _state: Optional[GameState] = None,
     ) -> None:
-        name = self.__class__.__name__
         if _state is not None:
-            logger.info(f"Restoring {name} from state, params are ignored")
+            logger.info(f"Restoring {self.__class__.__name__} from state")
             self._state = _state
         else:
             self._validate_board_size(size)
-            logger.info(
-                f"Initializing {name}({size=}, {num_players=}, {num_cells_per_turn=})"
-            )
+            logger.info(f"Initializing {self.__class__.__name__}")
             self._state = GameState(
                 size, num_players, num_cells_per_turn, num_cells_to_win
             )
-
         self._board = self.state.generate_board()
         logger.info(f"Successfully initialized {self}")
 
@@ -48,7 +44,7 @@ class GameEngine:
 
     @property
     def current_player(self) -> BasePlayer:
-        return Player[self.state.num_players].current(self.state.num_turns)
+        return self.state.Player.current(self.state.num_turns)
 
     @property
     def state(self) -> GameState:
@@ -67,14 +63,10 @@ class GameEngine:
         return bool(self._board[cell.row, cell.col])
 
     def __repr__(self) -> str:
-        params = {
-            "size": self._size,
-            "num_players": self.state.num_players,
-            "num_cells_per_turn": self.state.num_cells_per_turn,
-            "num_turns": self.state.num_turns,
-        }
+        params = self.state.as_dict()
+        params.pop("history")
         params_str = ", ".join(f"{key}={val}" for key, val in params.items())
-        return f"{self.__class__.__name__}({params_str})"
+        return f"{self.__class__.__name__}({params_str}), turn #{self.state.num_turns}"
 
     @property
     def _size(self) -> int:
